@@ -1,18 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using WebStore.Data;
 using WebStore.Models;
 
 namespace WebStore.Controllers
 {
     public class EmployeesController : Controller
     {
-        private static readonly List<Employee> __Employees = new()
-        {
-            new Employee { Id = 1, LastName = "Иванов", FirstName = "Иван", Patronymic = "Иванович", Age = 27 },
-            new Employee { Id = 2, LastName = "Петров", FirstName = "Пётр", Patronymic = "Петрович", Age = 31 },
-            new Employee { Id = 3, LastName = "Сидоров", FirstName = "Сидор", Patronymic = "Сидорович", Age = 18 },
-        };
+        private readonly List<Employee> _Employees;
 
-        public IActionResult Index() => View(__Employees);
+        public EmployeesController()
+        {
+            _Employees = TestData.Employees;
+        }
+
+        public IActionResult Index() => View(_Employees);
+
+        public IActionResult Details(int Id)
+        {
+            var employee = _Employees.FirstOrDefault(e => e.Id == Id);
+            if (employee is null)
+                return NotFound();
+
+            return View(employee);
+        }
     }
 }
