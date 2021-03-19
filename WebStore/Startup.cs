@@ -4,21 +4,35 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Infrastructure.Conventions;
+using WebStore.Infrastructure.Services;
+using WebStore.Infrastructure.Services.Interfaces;
 
 namespace WebStore
 {
-    public class Startup
+    public record Startup(IConfiguration Configuration)
     {
-        private IConfiguration Configuration { get; }
+        //private IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration Configuration)
-        {
-            this.Configuration = Configuration;
-        }
+        //public Startup(IConfiguration Configuration)
+        //{
+        //    this.Configuration = Configuration;
+        //}
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+
+            //services.AddMvc();
+
+            services
+               .AddControllersWithViews(
+                    mvc =>
+                    {
+                        //mvc.Conventions.Add(new ActionDescriptionAttribute("123"));
+                        mvc.Conventions.Add(new ApplicationConvention());
+                    })
+               .AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IConfiguration config*/)
@@ -31,6 +45,9 @@ namespace WebStore
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            //app.Map()
+            //app.Use()
 
             app.UseEndpoints(endpoints =>
             {

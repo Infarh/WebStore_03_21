@@ -7,6 +7,13 @@
 <div class="container">
 
     <h3>Сотрудники</h3>
+    
+    <hr/>
+    
+    <a asp-action="Edit" class="btn btn-primary">Создать</a> |
+    <a asp-action="Create" class="btn btn-primary">Создать2</a>
+
+    <hr/>
 
     <table class="table">
         <thead>
@@ -16,6 +23,8 @@
             <th>Имя</th>
             <th>Отчество</th>
             <th>Возраст</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -29,6 +38,18 @@
                 <td>@employee.FirstName</td>
                 <td>@employee.Patronymic</td>
                 <td>@employee.Age</td>
+                <td>
+                    <a asp-action="Edit" asp-route-Id="@employee.Id">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+                <td>
+                    <form asp-action="DeleteConfirmed" asp-route-id="@employee.Id">
+                        <button type="submit">
+                            <i class="fa fa-trash-o text-danger"></i>
+                        </button>
+                    </form>
+                </td>
             </tr>
         }
         </tbody>
