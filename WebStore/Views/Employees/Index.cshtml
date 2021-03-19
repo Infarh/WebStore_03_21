@@ -16,6 +16,7 @@
             <th>Имя</th>
             <th>Отчество</th>
             <th>Возраст</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -29,6 +30,11 @@
                 <td>@employee.FirstName</td>
                 <td>@employee.Patronymic</td>
                 <td>@employee.Age</td>
+                <td>
+                    <a asp-action="Edit" asp-route-Id="@employee.Id">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
             </tr>
         }
         </tbody>
