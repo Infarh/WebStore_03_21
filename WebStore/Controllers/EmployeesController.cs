@@ -70,5 +70,31 @@ namespace WebStore.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult Delete(int Id)
+        {
+            if (Id <= 0) return BadRequest();
+
+            var employee = _EmployeesData.Get(Id);
+
+            if (employee is null)
+                return NotFound();
+
+            return View(new EmployeeViewModel
+            {
+                Id = employee.Id,
+                LastName = employee.LastName,
+                Name = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Age = employee.Age
+            });
+        }
+
+        [HttpPost] // !!! важно !!!
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _EmployeesData.Delete(id);
+            return RedirectToAction("Index");
+        }
     }
 }
