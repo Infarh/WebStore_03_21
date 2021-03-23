@@ -9,6 +9,9 @@ namespace WebStore.Controllers
     [ActionDescription("Главный контроллер")]
     public class HomeController : Controller
     {
+        //private readonly IPrinter _Printer;
+        //public HomeController(IPrinter Printer) { _Printer = Printer; }
+
         [ActionDescription("Главное действие")]
         [AddHeader("Test", "Header value")]
         public IActionResult Index() => View();

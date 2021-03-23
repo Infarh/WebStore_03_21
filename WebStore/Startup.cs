@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +25,11 @@ namespace WebStore
         {
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
 
+            //services.AddScoped<StoragePrinter>();
+            //services.AddScoped<IPrinter, StoragePrinter>();
+            //services.AddScoped<IMessagesStorage, ListMessageStorage>();
+            //services.AddScoped<IPrinter, StoragePrinter2>();
+
             //services.AddMvc();
 
             services
@@ -35,8 +42,17 @@ namespace WebStore
                .AddRazorRuntimeCompilation();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IConfiguration config*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IServiceProvider services*/)
         {
+            //var printer1 = services.GetRequiredService<IPrinter>();
+            //var printer11 = services.GetRequiredService<StoragePrinter>();
+            //var printer2 = services.GetRequiredService<IPrinter>();
+
+            //using (var scope = services.CreateScope())
+            //{
+            //    var printer3 = scope.ServiceProvider.GetRequiredService<IPrinter>();
+            //}
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,5 +78,60 @@ namespace WebStore
                     "{controller=Home}/{action=Index}/{id?}");
             });
         }
+    }
+
+    public interface IPrinter
+    {
+        void Print(string message);
+    }
+
+    class StoragePrinter : IPrinter, IDisposable
+    {
+        private readonly IMessagesStorage _Storage;
+
+        public StoragePrinter(IMessagesStorage Storage) => _Storage = Storage;
+
+        public void Print(string message) => _Storage.Add(message);
+
+        public void Dispose()
+        {
+        }
+    }
+
+    class StoragePrinter2 : IPrinter, IDisposable
+    {
+        private readonly IMessagesStorage _Storage;
+
+        public StoragePrinter2(IMessagesStorage Storage) => _Storage = Storage;
+
+        public void Print(string message) => _Storage.Add(message);
+
+        public void Dispose()
+        {
+        }
+    }
+
+    interface IMessagesStorage
+    {
+        void Add(string message);
+
+        IEnumerable<(DateTime Time, string Message)> GetAll();
+    }
+
+    class ListMessageStorage : IMessagesStorage
+    {
+        private readonly List<(DateTime Time, string Message)> _Messages = new();
+
+        public ListMessageStorage()
+        {
+            
+        }
+
+        public void Add(string message)
+        {
+            _Messages.Add((DateTime.Now, message));
+        }
+
+        public IEnumerable<(DateTime Time, string Message)> GetAll() => _Messages;
     }
 }
