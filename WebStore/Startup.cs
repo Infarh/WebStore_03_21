@@ -24,6 +24,7 @@ namespace WebStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+            services.AddTransient<IProductData, InMemoryProductData>();
 
             //services.AddScoped<StoragePrinter>();
             //services.AddScoped<IPrinter, StoragePrinter>();

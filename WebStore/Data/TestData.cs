@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using WebStore.Domain.Entities;
 using WebStore.Models;
 
@@ -14,7 +15,7 @@ namespace WebStore.Data
         };
 
         public static IEnumerable<Section> Sections { get; } = new[]
-       {
+        {
               new Section { Id = 1, Name = "Спорт", Order = 0 },
               new Section { Id = 2, Name = "Nike", Order = 0, ParentId = 1 },
               new Section { Id = 3, Name = "Under Armour", Order = 1, ParentId = 1 },
