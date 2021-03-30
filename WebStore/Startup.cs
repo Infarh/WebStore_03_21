@@ -26,7 +26,10 @@ namespace WebStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebStoreDB>(opt => 
-                opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+                opt.UseSqlServer(Configuration.GetConnectionString("Default"))
+                   .EnableSensitiveDataLogging(true)
+                   //.LogTo(Console.WriteLine)
+                );
 
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             services.AddTransient<IProductData, InMemoryProductData>();
