@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 
 using WebStore.DAL.Context;
 using WebStore.Data;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Conventions;
 using WebStore.Infrastructure.Services;
 using WebStore.Infrastructure.Services.InMemory;
@@ -29,6 +31,41 @@ namespace WebStore
                 //.LogTo(Console.WriteLine)
                 );
             services.AddTransient<WebStoreDbInitializer>();
+
+            services.AddIdentity<User, Role>()
+               .AddEntityFrameworkStores<WebStoreDB>()
+               .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(opt =>
+            {
+#if DEBUG
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredUniqueChars = 3;
+#endif
+                opt.User.RequireUniqueEmail = false;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+                opt.Lockout.AllowedForNewUsers = false;
+                opt.Lockout.MaxFailedAccessAttempts = 10;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            });
+
+            services.ConfigureApplicationCookie(opt =>
+            {
+                opt.Cookie.Name = "GB.WebStore";
+                opt.Cookie.HttpOnly = true;
+                opt.ExpireTimeSpan = TimeSpan.FromDays(10);
+
+                opt.LoginPath = "/Account/Login";
+                opt.LogoutPath = "/Account/Logout";
+                opt.AccessDeniedPath = "/Account/AccessDenied";
+
+                opt.SlidingExpiration = true;
+            });
 
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddTransient<IProductData, InMemoryProductData>();
@@ -55,6 +92,9 @@ namespace WebStore
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
