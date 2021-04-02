@@ -74,7 +74,7 @@ namespace WebStore.Controllers
                 //if (Url.IsLocalUrl(Model.ReturnUrl))
                 //    return Redirect(Model.ReturnUrl);
                 //return RedirectToAction("Index", "Home");
-                return LocalRedirect(Model.ReturnUrl);
+                return LocalRedirect(Model.ReturnUrl ?? "/");
             }
 
             ModelState.AddModelError("", "Неверное имя пользователя, или пароль!");
@@ -89,6 +89,10 @@ namespace WebStore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult AccessDenied() => View();
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            ViewBag.ReturnUrl = ReturnUrl;
+            return View();
+        }
     }
 }
