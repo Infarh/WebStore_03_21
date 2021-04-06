@@ -32,5 +32,10 @@ namespace WebStore.Infrastructure.Services.InSQL
 
             return query;
         }
+
+        public Product GetProductById(int id) => _db.Products
+           .Include(p => p.Section)
+           .Include(p => p.Brand)
+           .FirstOrDefault(p => p.Id == id);
     }
 }
