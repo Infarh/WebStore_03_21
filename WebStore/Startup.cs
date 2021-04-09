@@ -26,11 +26,15 @@ namespace WebStore
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebStoreDB>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("Default"))
-                //.EnableSensitiveDataLogging(true)
-                //.LogTo(Console.WriteLine)
-                );
+            //services.AddDbContext<WebStoreDB>(opt =>
+            //    opt.UseSqlServer(Configuration.GetConnectionString("Default"))
+            //    //.EnableSensitiveDataLogging(true)
+            //    //.LogTo(Console.WriteLine)
+            //    );
+            services.AddDbContext<WebStoreDB>(opt => 
+                opt.UseSqlite(
+                    Configuration.GetConnectionString("Sqlite"), 
+                    o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));
             services.AddTransient<WebStoreDbInitializer>();
 
             services.AddIdentity<User, Role>()
@@ -39,14 +43,14 @@ namespace WebStore
 
             services.Configure<IdentityOptions>(opt =>
             {
-#if DEBUG
+//#if DEBUG
                 opt.Password.RequiredLength = 3;
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireLowercase = false;
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequiredUniqueChars = 3;
-#endif
+//#endif
                 opt.User.RequireUniqueEmail = false;
                 opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
