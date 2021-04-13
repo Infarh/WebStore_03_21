@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.EntityFrameworkCore;
-
 using WebStore.DAL.Context;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Servcies;
 
-namespace WebStore.Infrastructure.Services.InSQL
+namespace WebStore.Services.Services.InSQL
 {
     public class SqlProductData : IProductData // UnitOfWork
     {
