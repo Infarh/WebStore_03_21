@@ -29,8 +29,10 @@ namespace WebStore.Domain.DTO
     /// <summary>Пункт заказа</summary>
     public class OrderItemDTO
     {
-        /// <summary>Идентификатор</summary>
         public int Id { get; set; }
+
+        /// <summary>Идентификатор</summary>
+        public int ProductId { get; set; }
 
         /// <summary>Цена</summary>
         public decimal Price { get; set; }
