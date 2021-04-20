@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Interfaces", "Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Services", "Services\WebStore.Services\WebStore.Services.csproj", "{5D7FEF47-3342-4CB4-ABE2-4E2C9BF2016E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.ServiceHosting", "Services\WebStore.ServiceHosting\WebStore.ServiceHosting.csproj", "{61B72456-972C-420A-A8AA-6003C20EF86C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.ServiceHosting", "Services\WebStore.ServiceHosting\WebStore.ServiceHosting.csproj", "{61B72456-972C-420A-A8AA-6003C20EF86C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.Clients", "Services\WebStore.Clients\WebStore.Clients.csproj", "{E5656ECC-4340-4036-BCB0-6EE6CD0F6D01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Clients", "Services\WebStore.Clients\WebStore.Clients.csproj", "{E5656ECC-4340-4036-BCB0-6EE6CD0F6D01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.ConsoleUI", "UI\WebStore.ConsoleUI\WebStore.ConsoleUI.csproj", "{895572D1-B152-40FF-BEDE-EEC94837FF39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{E5656ECC-4340-4036-BCB0-6EE6CD0F6D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5656ECC-4340-4036-BCB0-6EE6CD0F6D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5656ECC-4340-4036-BCB0-6EE6CD0F6D01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895572D1-B152-40FF-BEDE-EEC94837FF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895572D1-B152-40FF-BEDE-EEC94837FF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895572D1-B152-40FF-BEDE-EEC94837FF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895572D1-B152-40FF-BEDE-EEC94837FF39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{5D7FEF47-3342-4CB4-ABE2-4E2C9BF2016E} = {B07F3958-E610-42C2-9677-1B68F8EEFD0A}
 		{61B72456-972C-420A-A8AA-6003C20EF86C} = {B07F3958-E610-42C2-9677-1B68F8EEFD0A}
 		{E5656ECC-4340-4036-BCB0-6EE6CD0F6D01} = {B07F3958-E610-42C2-9677-1B68F8EEFD0A}
+		{895572D1-B152-40FF-BEDE-EEC94837FF39} = {5D31B3C2-B53F-4C38-811A-13E5C17B0EDC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F526B6AB-6BEF-49D9-AE15-9F50F08FE0CD}
