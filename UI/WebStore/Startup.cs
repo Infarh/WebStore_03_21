@@ -16,6 +16,7 @@ using WebStore.Clients.Values;
 using WebStore.DAL.Context;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Conventions;
+using WebStore.Infrastructure.Middleware;
 using WebStore.Interfaces.Services;
 using WebStore.Interfaces.TestAPI;
 using WebStore.Logger;
@@ -110,6 +111,8 @@ namespace WebStore
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
