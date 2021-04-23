@@ -17,7 +17,10 @@ namespace WebStore.Clients.Employees
             : base(Configuration, WebAPI.Employees) =>
             _Logger = Logger;
 
-        public IEnumerable<Employee> Get() => Get<IEnumerable<Employee>>(Address);
+        public IEnumerable<Employee> Get()
+        {
+            return Get<IEnumerable<Employee>>(Address);
+        }
 
         public Employee Get(int id) => Get<Employee>($"{Address}/{id}");
 
@@ -35,10 +38,14 @@ namespace WebStore.Clients.Employees
         public bool Delete(int id)
         {
             _Logger.LogInformation("Удаление сотрудника id:{0}...", id);
-            var result = Delete($"{Address}/{id}").IsSuccessStatusCode;
-            _Logger.LogInformation("Удаление сотрудника id:{0} - {1}",
-                id, result ? "выполнено" : "не найден");
-            return result;
+            using(_Logger.BeginScope("Удаление сотрудника id:{0}", id))
+            {
+                var result = Delete($"{Address}/{id}").IsSuccessStatusCode;
+                _Logger.LogInformation(
+                    "Удаление сотрудника id:{0} - {1}",
+                    id, result ? "выполнено" : "не найден");
+                return result;
+            }
         }
     }
 }

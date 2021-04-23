@@ -16,7 +16,8 @@ namespace WebStore
                 //   .AddEventLog()
                 //   .AddConsole()
                 //   .AddFilter/*<ConsoleLoggerProvider>*/("Microsoft.Hosting", LogLevel.Error)
-                //   .AddFilter((category, level) => !(category.StartsWith("Microsoft") && level >= LogLevel.Warning)))
+                //   .AddFilter((category, level) => !(category.StartsWith("Microsoft") && level >= LogLevel.Warning))
+                //)
                 .ConfigureWebHostDefaults(host => host
                    .UseStartup<Startup>()
                 )
