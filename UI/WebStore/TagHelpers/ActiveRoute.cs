@@ -13,7 +13,7 @@ namespace WebStore.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-
+            фдоралдофралдофыар
 
             output.Attributes.RemoveAll(AttributeName);
         }
