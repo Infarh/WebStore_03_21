@@ -19,3 +19,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
+    - name: Build Results
+    - uses: actions/upload-artifact@master
+      with:
+        name: Build
+        path: WebStore_03_21/UI/WebStore/bin/Debug/net5.0
