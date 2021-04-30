@@ -23,4 +23,4 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: Build
-        path: WebStore_03_21/UI/WebStore/bin/Debug/net5.0
+        path: /home/runner/work/WebStore_03_21/WebStore_03_21/UI/WebStore/bin/Debug/net5.0/
