@@ -38,7 +38,12 @@
                                        asp-action="Add" asp-route-id="@product.Id">
                                          +
                                     </a>
-                                    <input class="cart_quantity_input" type="text" name="quantity" value="@quantity" autocomplete="off" size="2">
+                                    <input class="cart_quantity_input"
+                                           type="text"
+                                           name="quantity" 
+                                           value="@quantity" 
+                                           autocomplete="off" 
+                                           size="2">
                                     <a class="cart_quantity_down" 
                                        data-id="@product.Id"
                                        asp-action="Decrement" asp-route-id="@product.Id">
