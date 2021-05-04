@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 using WebStore.DAL.Context;
 using WebStore.Domain;
@@ -28,7 +29,7 @@ namespace WebStore.Services.Services.InSQL
             .FirstOrDefault(s => s.Id == id)
             .ToDTO();
 
-        public IEnumerable<ProductDTO> GetProducts(ProductFilter Filter = null)
+        public PageProductsDTO GetProducts(ProductFilter Filter = null)
         {
             IQueryable<Product> query = _db.Products
                 .Include(p => p.Section)
@@ -45,7 +46,19 @@ namespace WebStore.Services.Services.InSQL
                     query = query.Where(product => product.BrandId == brand_id);
             }
 
-            return query.AsEnumerable().ToDTO();
+            var total_count = query.Count();
+
+            //if (Filter?.PageSize > 0)
+            //    query = query
+            //       .Skip((Filter.Page - 1) * (int) Filter.PageSize)
+            //       .Take((int) Filter.PageSize);
+
+            if (Filter is { PageSize: > 0 and var page_size, Page: > 0 and var page_number })
+                query = query
+                   .Skip((page_number - 1) * page_size)
+                   .Take(page_size);
+
+            return new PageProductsDTO(query.AsEnumerable().ToDTO(), total_count);
         }
 
         public ProductDTO GetProductById(int id) => _db.Products
