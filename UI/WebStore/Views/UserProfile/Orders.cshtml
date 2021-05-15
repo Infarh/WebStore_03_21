@@ -25,6 +25,16 @@
                 <td>@order.Phone</td>
                 <td>@order.TotalPrice</td>
             </tr>
+            foreach (var item in order.Products)
+            {
+                <tr>
+                    <td>-</td>
+                    <td>@item.Product.Name</td>
+                    <td>Штук:@item.Count</td>
+                    <td>Цена:@item.Price</td>
+                    <td>Стоимость:@item.TotalPrice</td>
+                </tr>
+            }
         }
     </tbody>
 </table>

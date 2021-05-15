@@ -104,7 +104,7 @@ namespace WebStore
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory log)
         {
-            log.AddLog4Net();
+            //log.AddLog4Net();
 
             if (env.IsDevelopment())
             {

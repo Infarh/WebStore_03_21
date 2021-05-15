@@ -84,9 +84,9 @@ namespace WebStore.ServiceHosting
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db, ILoggerFactory log)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db/*, ILoggerFactory log*/)
         {
-            log.AddLog4Net();
+            //log.AddLog4Net();
 
             db.Initialize();
 
