@@ -1,29 +1,17 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using System.Net.Http;
 
 namespace WebStore.Clients.Base
 {
-    public abstract class BaseClient : IDisposable
+    public abstract class BaseClient
     {
         protected string Address { get; }
 
         protected HttpClient Http { get; }
 
-        protected BaseClient(IConfiguration Configuration, string ServiceAddress)
+        protected BaseClient(HttpClient Client, string ServiceAddress)
         {
-            Address = ServiceAddress;
-
-            Http = new HttpClient
-            {
-                BaseAddress = new Uri(Configuration["WebApiURL"]),
-                DefaultRequestHeaders =
-                {
-                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
-                }
-            };
+            Http = Client;
+            Address = ServiceAddress;           
         }
 
         protected T Get<T>(string url) => GetAsync<T>(url).Result; //.GetAwaiter().GetResult();

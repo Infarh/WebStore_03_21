@@ -9,14 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebStore.Clients.Employees;
-using WebStore.Clients.Orders;
-using WebStore.Clients.Products;
 using WebStore.Clients.Values;
 using WebStore.DAL.Context;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Conventions;
-using WebStore.Interfaces.Services;
+using WebStore.Interfaces.Servcies;
 using WebStore.Interfaces.TestAPI;
 using WebStore.Services.Data;
 using WebStore.Services.Services.InCookies;
@@ -71,14 +68,13 @@ namespace WebStore
                 opt.SlidingExpiration = true;
             });
 
-            //services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-            services.AddTransient<IEmployeesData, EmployeesClient>();
-            //services.AddScoped<IProductData, SqlProductData>();
-            services.AddScoped<IProductData, ProductsClient>();
+            services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+            //services.AddTransient<IProductData, InMemoryProductData>();
+            services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<ICartServices, InCookiesCartService>();
-            //services.AddScoped<IOrderService, SqlOrderService>();
-            services.AddScoped<IOrderService, OrdersClient>();
-            services.AddScoped<IValuesService, ValuesClient>();
+            services.AddScoped<IOrderService, SqlOrderService>();
+
+            services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
 
             services
                .AddControllersWithViews(
