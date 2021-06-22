@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,28 +24,32 @@ namespace WebStore.Clients.Base
         protected T Get<T>(string url) => GetAsync<T>(url).Result; //.GetAwaiter().GetResult();
         protected async Task<T> GetAsync<T>(string url, CancellationToken Cancel = default)
         {
-            var response = await Http.GetAsync(url);
-            return await response.EnsureSuccessStatusCode().Content.ReadFromJsonAsync<T>();
+            var response = await Http.GetAsync(url, Cancel).ConfigureAwait(false);
+            if (response.StatusCode == HttpStatusCode.NoContent) return default;
+            return await response.EnsureSuccessStatusCode()
+               .Content
+               .ReadFromJsonAsync<T>(cancellationToken: Cancel)
+               .ConfigureAwait(false);
         }
 
         protected HttpResponseMessage Post<T>(string url, T item) => PostAsync(url, item).Result;
         protected async Task<HttpResponseMessage> PostAsync<T>(string url, T item, CancellationToken Cancel = default)
         {
-            var response = await Http.PostAsJsonAsync(url, item);
+            var response = await Http.PostAsJsonAsync(url, item, Cancel).ConfigureAwait(false);
             return response.EnsureSuccessStatusCode();
         }
 
         protected HttpResponseMessage Put<T>(string url, T item) => PutAsync(url, item).Result;
         protected async Task<HttpResponseMessage> PutAsync<T>(string url, T item, CancellationToken Cancel = default)
         {
-            var response = await Http.PutAsJsonAsync(url, item);
+            var response = await Http.PutAsJsonAsync(url, item, Cancel).ConfigureAwait(false);
             return response.EnsureSuccessStatusCode();
         }
 
         protected HttpResponseMessage Delete(string url) => DeleteAsync(url).Result;
         protected async Task<HttpResponseMessage> DeleteAsync(string url, CancellationToken Cancel = default)
         {
-            var response = await Http.DeleteAsync(url);
+            var response = await Http.DeleteAsync(url, Cancel).ConfigureAwait(false);
             return response;
         }
 
@@ -57,7 +64,7 @@ namespace WebStore.Clients.Base
         private bool _Disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if(_Disposed) return;
+            if (_Disposed) return;
             if (disposing)
             {
                 // Очистка управляемых ресурсов

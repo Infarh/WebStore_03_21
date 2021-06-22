@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>WebStore.API</name>
+        <name>WebStore.ServiceHosting</name>
     </assembly>
     <members>
         <member name="T:WebStore.ServiceHosting.Controllers.OrdersApiController">

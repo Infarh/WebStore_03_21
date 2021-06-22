@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using WebStore.Clients.Products;
 
@@ -12,7 +13,11 @@ namespace WebStore.ConsoleUI
                .AddJsonFile("appsettings.json")
                .Build();
 
-            var products_client = new ProductsClient(configuration);
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(configuration["WebApiURL"])
+            };
+            var products_client = new ProductsClient(client);
 
             Console.WriteLine("К запросу готов!");
             Console.ReadLine();
