@@ -1,4 +1,6 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace WebStore.Clients.Base
 {
@@ -11,14 +13,14 @@ namespace WebStore.Clients.Base
         protected BaseClient(HttpClient Client, string ServiceAddress)
         {
             Http = Client;
-            Address = ServiceAddress;           
+            Address = ServiceAddress;
         }
 
         protected T Get<T>(string url) => GetAsync<T>(url).Result; //.GetAwaiter().GetResult();
         protected async Task<T> GetAsync<T>(string url)
         {
             var response = await Http.GetAsync(url);
-            return await response.EnsureSuccessStatusCode().Content.ReadAsAsync<T>();
+            return await response.EnsureSuccessStatusCode().Content.ReadFromJsonAsync<T>();
         }
 
         protected HttpResponseMessage Post<T>(string url, T item) => PostAsync(url, item).Result;
