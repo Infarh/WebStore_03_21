@@ -73,7 +73,8 @@ namespace WebStore
             services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<ICartServices, InCookiesCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
-            services.AddScoped<IValuesService, ValuesClient>();
+
+            services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
 
             services
                .AddControllersWithViews(

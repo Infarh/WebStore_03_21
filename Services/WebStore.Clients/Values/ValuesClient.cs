@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 using WebStore.Clients.Base;
 using WebStore.Interfaces.TestAPI;
 
@@ -11,14 +11,13 @@ namespace WebStore.Clients.Values
 {
     public class ValuesClient : BaseClient, IValuesService
     {
-        public ValuesClient(IConfiguration Configuration) : base(Configuration, "api/values") { }
-
+        public ValuesClient(HttpClient Client) : base(Client, "api/values") { }
 
         public IEnumerable<string> Get()
         {
             var response = Http.GetAsync(Address).Result;
             if (response.IsSuccessStatusCode)
-                return response.Content.ReadAsAsync<IEnumerable<string>>().Result;
+                return response.Content.ReadFromJsonAsync<IEnumerable<string>>().Result;
 
             return Enumerable.Empty<string>();
         }
@@ -27,7 +26,7 @@ namespace WebStore.Clients.Values
         {
             var response = Http.GetAsync($"{Address}/{id}").Result;
             if (response.IsSuccessStatusCode)
-                return response.Content.ReadAsAsync<string>().Result;
+                return response.Content.ReadFromJsonAsync<string>().Result;
 
             return string.Empty;
         }
