@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace WebStore.Clients.Base
 {
@@ -13,45 +12,37 @@ namespace WebStore.Clients.Base
 
         protected HttpClient Http { get; }
 
-        protected BaseClient(IConfiguration Configuration, string ServiceAddress)
+        protected BaseClient(HttpClient Client, string ServiceAddress)
         {
+            Http = Client;
             Address = ServiceAddress;
-
-            Http = new HttpClient
-            {
-                BaseAddress = new Uri(Configuration["WebApiURL"]),
-                DefaultRequestHeaders =
-                {
-                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
-                }
-            };
         }
 
         protected T Get<T>(string url) => GetAsync<T>(url).Result; //.GetAwaiter().GetResult();
         protected async Task<T> GetAsync<T>(string url, CancellationToken Cancel = default)
         {
-            var response = await Http.GetAsync(url, Cancel);
-            return await response.EnsureSuccessStatusCode().Content.ReadAsAsync<T>(Cancel);
+            var response = await Http.GetAsync(url);
+            return await response.EnsureSuccessStatusCode().Content.ReadFromJsonAsync<T>();
         }
 
         protected HttpResponseMessage Post<T>(string url, T item) => PostAsync(url, item).Result;
         protected async Task<HttpResponseMessage> PostAsync<T>(string url, T item, CancellationToken Cancel = default)
         {
-            var response = await Http.PostAsJsonAsync(url, item, Cancel);
+            var response = await Http.PostAsJsonAsync(url, item);
             return response.EnsureSuccessStatusCode();
         }
 
         protected HttpResponseMessage Put<T>(string url, T item) => PutAsync(url, item).Result;
         protected async Task<HttpResponseMessage> PutAsync<T>(string url, T item, CancellationToken Cancel = default)
         {
-            var response = await Http.PutAsJsonAsync(url, item, Cancel);
+            var response = await Http.PutAsJsonAsync(url, item);
             return response.EnsureSuccessStatusCode();
         }
 
         protected HttpResponseMessage Delete(string url) => DeleteAsync(url).Result;
         protected async Task<HttpResponseMessage> DeleteAsync(string url, CancellationToken Cancel = default)
         {
-            var response = await Http.DeleteAsync(url, Cancel);
+            var response = await Http.DeleteAsync(url);
             return response;
         }
 

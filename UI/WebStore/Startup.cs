@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Clients.Employees;
-using WebStore.Clients.Identity;
-using WebStore.Clients.Orders;
 using WebStore.Clients.Products;
 using WebStore.Clients.Values;
 using WebStore.DAL.Context;
@@ -78,11 +78,14 @@ namespace WebStore
                 opt.SlidingExpiration = true;
             });
 
-            services.AddTransient<IEmployeesData, EmployeesClient>();
-            services.AddScoped<IProductData, ProductsClient>();
+            services.AddHttpClient<IEmployeesData, EmployeesClient>("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebApiURL"]))
+               .AddTypedClient<IEmployeesData, EmployeesClient>()
+               .AddTypedClient<IOrderService, SqlOrderService>()
+               .AddTypedClient<IProductData, ProductsClient>()
+               .AddTypedClient<IValuesService, ValuesClient>();
+
+            //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddScoped<ICartServices, InCookiesCartService>();
-            services.AddScoped<IOrderService, OrdersClient>();
-            services.AddScoped<IValuesService, ValuesClient>();
 
             services
                .AddControllersWithViews(
@@ -93,8 +96,10 @@ namespace WebStore
                .AddRazorRuntimeCompilation();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db)
         {
+            db.Initialize();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

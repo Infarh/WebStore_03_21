@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 using WebStore.Clients.Base;
 using WebStore.Domain;
 using WebStore.Domain.DTO;
@@ -11,7 +11,7 @@ namespace WebStore.Clients.Products
 {
     public class ProductsClient : BaseClient, IProductData
     {
-        public ProductsClient(IConfiguration Configuration) : base(Configuration, WebAPI.Products) { }
+        public ProductsClient(HttpClient Client) : base(Client, WebAPI.Products) { }
 
         public IEnumerable<SectionDTO> GetSections() => Get<IEnumerable<SectionDTO>>($"{Address}/sections");
 
@@ -24,7 +24,7 @@ namespace WebStore.Clients.Products
         public IEnumerable<ProductDTO> GetProducts(ProductFilter Filter = null) =>
             Post(Address, Filter ?? new ProductFilter())
                .Content
-               .ReadAsAsync<IEnumerable<ProductDTO>>()
+               .ReadFromJsonAsync<IEnumerable<ProductDTO>>()
                .Result;
 
         public ProductDTO GetProductById(int id) => Get<ProductDTO>($"{Address}/{id}");

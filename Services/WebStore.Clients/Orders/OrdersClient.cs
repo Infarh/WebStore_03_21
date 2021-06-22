@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using WebStore.Clients.Base;
 using WebStore.Domain.DTO;
 using WebStore.Interfaces;
@@ -11,7 +11,7 @@ namespace WebStore.Clients.Orders
 {
     public class OrdersClient : BaseClient, IOrderService
     {
-        public OrdersClient(IConfiguration Configuration) : base(Configuration, WebAPI.Orders) { }
+        public OrdersClient(HttpClient Client) : base(Client, WebAPI.Orders) { }
 
         public async Task<IEnumerable<OrderDTO>> GetUserOrders(string UserName) => 
             await GetAsync<IEnumerable<OrderDTO>>($"{Address}/user/{UserName}");
@@ -21,7 +21,7 @@ namespace WebStore.Clients.Orders
         public async Task<OrderDTO> CreateOrder(string UserName, CreateOrderModel OrderModel)
         {
             var response = await PostAsync($"{Address}/{UserName}", OrderModel);
-            return await response.Content.ReadAsAsync<OrderDTO>();
+            return await response.Content.ReadFromJsonAsync<OrderDTO>();
         }
     }
 }
