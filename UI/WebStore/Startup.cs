@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Clients.Employees;
 using WebStore.Clients.Orders;
 using WebStore.Clients.Products;
 using WebStore.Clients.Values;
@@ -70,14 +71,22 @@ namespace WebStore
                 opt.SlidingExpiration = true;
             });
 
-            services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+            //services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<ICartServices, InCookiesCartService>();
             //services.AddScoped<IOrderService, SqlOrderService>();
 
-            services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
-            services.AddHttpClient<IProductData, ProductsClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
-            services.AddHttpClient<IOrderService, OrdersClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
+            services.AddHttpClient("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebApiURL"]))
+               .AddTypedClient<IValuesService, ValuesClient>()
+               .AddTypedClient<IProductData, ProductsClient>()
+               .AddTypedClient<IOrderService, OrdersClient>()
+               .AddTypedClient<IEmployeesData, EmployeesClient>()
+                ;
+
+            //services.AddHttpClient<IValuesService, ValuesClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
+            //services.AddHttpClient<IProductData, ProductsClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
+            //services.AddHttpClient<IOrderService, OrdersClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
+            //services.AddHttpClient<IEmployeesData, EmployeesClient>(client => client.BaseAddress = new Uri(Configuration["WebApiURL"]));
 
             services
                .AddControllersWithViews(
