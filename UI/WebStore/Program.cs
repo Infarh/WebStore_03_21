@@ -1,8 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
@@ -15,13 +13,6 @@ namespace WebStore
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                //.ConfigureLogging((host, log) => log
-                //   //.ClearProviders()
-                //   //.AddEventLog()
-                //   //.AddConsole(opt => opt.IncludeScopes = true)
-                //   //.AddFilter/*<ConsoleLoggerProvider>*/("Microsoft.Hosting", LogLevel.Error)
-                //   //.AddFilter((category, level) => !(category.StartsWith("Microsoft") && level >= LogLevel.Warning))
-                //)
                 .ConfigureWebHostDefaults(host => host
                    .UseStartup<Startup>()
                 )
@@ -33,7 +24,7 @@ namespace WebStore
                         outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}]{SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}")
                    .WriteTo.RollingFile($@".\Logs\WebStore[{DateTime.Now:yyyy-MM-ddTHH-mm-ss}].log")
                    .WriteTo.File(new JsonFormatter(",", true), $@".\Logs\WebStore[{DateTime.Now:yyyy-MM-ddTHH-mm-ss}].log.json")
-                   .WriteTo.Seq("http://localhost:5341"))
+                   .WriteTo.Seq(host.Configuration["seq"]))
             ;
     }
 }

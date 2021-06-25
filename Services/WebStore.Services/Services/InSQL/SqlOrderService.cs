@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using WebStore.DAL.Context;
 using WebStore.Domain.DTO;
 using WebStore.Domain.Entities.Identity;
@@ -22,7 +24,7 @@ namespace WebStore.Services.Services.InSQL
         private readonly ILogger<SqlOrderService> _Logger;
 
         public SqlOrderService(
-            WebStoreDB db, 
+            WebStoreDB db,
             UserManager<User> UserManager,
             ILogger<SqlOrderService> Logger)
         {
@@ -34,6 +36,7 @@ namespace WebStore.Services.Services.InSQL
         public async Task<IEnumerable<OrderDTO>> GetUserOrders(string UserName) => (await _db.Orders
            .Include(order => order.User)
            .Include(order => order.Items)
+           .ThenInclude(item => item.Product)
            .Where(order => order.User.UserName == UserName)
            .ToArrayAsync())
            .Select(order => order.ToDTO());
@@ -50,7 +53,7 @@ namespace WebStore.Services.Services.InSQL
             if (user is null)
                 throw new InvalidOperationException($"Пользователь с именем {UserName} в БД отсутствует");
 
-            _Logger.LogInformation("Оформление нового заказа для {0}", 
+            _Logger.LogInformation("Оформление нового заказа для {0}",
                 UserName);
 
             var timer = Stopwatch.StartNew();
@@ -86,7 +89,7 @@ namespace WebStore.Services.Services.InSQL
             foreach (var item in OrderModel.Items)
             {
                 var product = await _db.Products.FindAsync(item.ProductId);
-                if(product is null) continue;
+                if (product is null) continue;
 
                 var order_item = new OrderItem
                 {

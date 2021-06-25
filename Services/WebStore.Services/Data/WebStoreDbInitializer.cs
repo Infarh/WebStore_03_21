@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WebStore.DAL.Context;
 using WebStore.Domain.Entities.Identity;
@@ -15,17 +16,20 @@ namespace WebStore.Services.Data
         private readonly UserManager<User> _UserManager;
         private readonly RoleManager<Role> _RoleManager;
         private readonly ILogger<WebStoreDbInitializer> _Logger;
+        private readonly IConfiguration _Configuration;
 
         public WebStoreDbInitializer(
             WebStoreDB db,
             UserManager<User> UserManager,
             RoleManager<Role> RoleManager,
-            ILogger<WebStoreDbInitializer> Logger)
+            ILogger<WebStoreDbInitializer> Logger,
+            IConfiguration Configuration)
         {
             _db = db;
             _UserManager = UserManager;
             _RoleManager = RoleManager;
             _Logger = Logger;
+            _Configuration = Configuration;
         }
 
         public void Initialize()
@@ -158,7 +162,10 @@ namespace WebStore.Services.Data
                     UserName = User.Administrator
                 };
 
-                var creation_result = await _UserManager.CreateAsync(admin, User.DefaultAdminPassword);
+                var admin_password = _Configuration["DefaultAdminPassword"] is { Length: > 0 } pass
+                    ? pass
+                    : User.DefaultAdminPassword;
+                var creation_result = await _UserManager.CreateAsync(admin, admin_password);
                 if (creation_result.Succeeded)
                 {
                     _Logger.LogInformation("Учётная запись администратора создана успешно.");
